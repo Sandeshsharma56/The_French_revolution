@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The French Revolution – Class 9 History Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0e0c;
+    --surface: #1a1916;
+    --border: #2e2c28;
+    --text: #f0ede6;
+    --muted: #9a9587;
+    --accent: #c9a84c;
+    --accent-dim: #7a5f22;
+    --correct: #4a7c59;
+    --correct-bg: #1a2e21;
+    --wrong: #8b3a3a;
+    --wrong-bg: #2e1515;
+    --reveal-bg: #1e2d1e;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .container { width: 100%; max-width: 640px; }
+
+  header { text-align: center; margin-bottom: 2.5rem; padding-top: 1rem; }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    padding: 4px 14px;
+    border-radius: 99px;
+    margin-bottom: 1rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 6vw, 38px);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  header p { font-size: 14px; color: var(--muted); }
+
+  .progress-wrap { margin-bottom: 1.5rem; }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .progress-track { height: 3px; background: var(--border); border-radius: 99px; }
+  .progress-fill { height: 3px; background: var(--accent); border-radius: 99px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--accent-dim); background: rgba(201,168,76,0.05); }
+  .opt:disabled { cursor: default; }
+
+  .opt-letter {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+
+  .opt.correct { border-color: var(--correct); background: var(--correct-bg); }
+  .opt.correct .opt-letter { background: var(--correct); border-color: var(--correct); color: #fff; }
+  .opt.wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+  .opt.wrong .opt-letter { background: var(--wrong); border-color: var(--wrong); color: #fff; }
+  .opt.reveal { border-color: var(--correct); background: var(--reveal-bg); opacity: 0.75; }
+  .opt.reveal .opt-letter { border-color: var(--correct); color: var(--correct); }
+
+  .feedback {
+    margin-top: 1rem;
+    font-size: 14px;
+    min-height: 18px;
+    font-weight: 500;
+  }
+  .feedback.correct { color: #6ab57e; }
+  .feedback.wrong { color: #e07070; }
+
+  .next-row { display: flex; justify-content: flex-end; margin-top: 1.5rem; }
+  .next-btn {
+    display: none;
+    padding: 10px 28px;
+    background: var(--accent);
+    color: #1a1400;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .next-btn:hover { opacity: 0.85; }
+
+  /* Result */
+  .result { text-align: center; }
+  .score-ring {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .score-big { font-size: 34px; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--accent); }
+  .score-denom { font-size: 13px; color: var(--muted); }
+  .result-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  .result-sub { font-size: 14px; color: var(--muted); margin-bottom: 1.5rem; }
+
+  .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+  .stat { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
+  .stat-val { font-size: 22px; font-weight: 700; font-family: 'Playfair Display', serif; }
+  .stat-val.c { color: #6ab57e; }
+  .stat-val.w { color: #e07070; }
+  .stat-val.p { color: var(--accent); }
+
+  .retry-btn {
+    padding: 11px 32px;
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 2rem;
+    transition: background 0.15s;
+  }
+  .retry-btn:hover { background: rgba(201,168,76,0.08); }
+
+  .review { text-align: left; }
+  .review-heading { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 12px; }
+  .review-item { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 8px; }
+  .review-q { font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+  .review-row { font-size: 13px; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+  .badge { font-size: 10px; padding: 2px 8px; border-radius: 99px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+  .badge-c { background: var(--correct-bg); color: #6ab57e; border: 1px solid var(--correct); }
+  .badge-w { background: var(--wrong-bg); color: #e07070; border: 1px solid var(--wrong); }
+  .badge-a { background: var(--correct-bg); color: #6ab57e; border: 1px solid var(--correct); }
+
+  @media (max-width: 480px) {
+    .card { padding: 1.25rem; }
+    .q-text { font-size: 17px; }
+    .stats { grid-template-columns: 1fr 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="tag">Class 9 · History · Chapter 1</div>
+    <h1>The French Revolution</h1>
+    <p>15 questions · Auto-graded · Instant results</p>
+  </header>
+
+  <div id="quiz-view">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="q-counter">Question 1 of 15</span>
+        <span id="q-score">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="next-row"><button class="next-btn" id="next-btn">Next →</button></div>
+    </div>
+  </div>
+
+  <div id="result-view" style="display:none">
+    <div class="card result">
+      <div class="score-ring">
+        <span class="score-big" id="r-score">0</span>
+        <span class="score-denom">/ 15</span>
+      </div>
+      <div class="result-title" id="r-title"></div>
+      <div class="result-sub" id="r-sub"></div>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Correct</div><div class="stat-val c" id="r-correct">0</div></div>
+        <div class="stat"><div class="stat-label">Wrong</div><div class="stat-val w" id="r-wrong">0</div></div>
+        <div class="stat"><div class="stat-label">Score</div><div class="stat-val p" id="r-pct">0%</div></div>
+      </div>
+      <button class="retry-btn" onclick="restart()">↺ Try Again</button>
+      <div class="review">
+        <div class="review-heading">Answer Review</div>
+        <div id="review-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  { q: "The French Revolution began in the year:", opts: ["1776","1789","1799","1804"], ans: 1 },
+  { q: "French society before the Revolution was divided into:", opts: ["Two Estates","Four Estates","Three Estates","Five Classes"], ans: 2 },
+  { q: "Which estate did the clergy belong to?", opts: ["Second Estate","Third Estate","First Estate","None of the above"], ans: 2 },
+  { q: "The slogan of the French Revolution was:", opts: ["Peace, Land, Bread","Liberty, Equality, Fraternity","Justice, Unity, Progress","Freedom, Rights, Democracy"], ans: 1 },
+  { q: "The Bastille was a famous:", opts: ["Palace of the King","Prison fortress","Church","Parliament building"], ans: 1 },
+  { q: "The Reign of Terror was associated with:", opts: ["Louis XVI","Napoleon Bonaparte","Robespierre","Voltaire"], ans: 2 },
+  { q: "The Declaration of the Rights of Man and Citizen was passed in:", opts: ["1787","1791","1789","1793"], ans: 2 },
+  { q: "Which Enlightenment thinker influenced the French Revolution with ideas of social contract?", opts: ["Voltaire","Montesquieu","Rousseau","Locke"], ans: 2 },
+  { q: "Who was the king of France during the Revolution?", opts: ["Louis XIV","Louis XV","Louis XVI","Napoleon I"], ans: 2 },
+  { q: "The Third Estate mainly consisted of:", opts: ["Clergy and Nobles","Peasants, merchants, lawyers, and artisans","Only peasants","Soldiers and traders"], ans: 1 },
+  { q: "Which of the following was NOT a cause of the French Revolution?", opts: ["Food shortage","Heavy taxation on the poor","Industrial Revolution in France","Financial crisis of the government"], ans: 2 },
+  { q: "The National Assembly was formed by:", opts: ["The King","The Clergy","Representatives of the Third Estate","The Military"], ans: 2 },
+  { q: "Napoleon Bonaparte rose to power in France after:", opts: ["The Reign of Terror","The fall of the Directory","The storming of the Bastille","The execution of Louis XVI"], ans: 1 },
+  { q: "Slavery was abolished in French colonies in:", opts: ["1789","1791","1794","1799"], ans: 2 },
+  { q: "The ideas of the French Revolution influenced which major movements?", opts: ["Only European revolutions","Anti-colonial movements in Asia, Africa, and South America","Only the American Civil War","None of the above"], ans: 1 }
+];
+
+const letters = ['A','B','C','D'];
+let order = [], current = 0, score = 0, answered = false, userAnswers = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function render() {
+  const idx = order[current];
+  const q = questions[idx];
+  document.getElementById('q-counter').textContent = `Question ${current + 1} of ${questions.length}`;
+  document.getElementById('q-score').textContent = `Score: ${score}`;
+  document.getElementById('prog').style.width = ((current / questions.length) * 100) + '%';
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('next-btn').style.display = 'none';
+  answered = false;
+
+  const optDiv = document.getElementById('options');
+  optDiv.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => pick(i);
+    optDiv.appendChild(btn);
+  });
+}
+
+function pick(i) {
+  if (answered) return;
+  answered = true;
+  const idx = order[current];
+  const q = questions[idx];
+  const btns = document.querySelectorAll('.opt');
+  btns.forEach(b => b.disabled = true);
+  userAnswers[current] = i;
+  if (i === q.ans) {
+    btns[i].classList.add('correct');
+    document.getElementById('feedback').textContent = '✓ Correct!';
+    document.getElementById('feedback').className = 'feedback correct';
+    score++;
+  } else {
+    btns[i].classList.add('wrong');
+    btns[q.ans].classList.add('reveal');
+    document.getElementById('feedback').textContent = '✗ Incorrect. The correct answer is highlighted.';
+    document.getElementById('feedback').className = 'feedback wrong';
+  }
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+document.getElementById('next-btn').onclick = () => {
+  current++;
+  if (current >= questions.length) showResult();
+  else render();
+};
+
+function showResult() {
+  document.getElementById('prog').style.width = '100%';
+  document.getElementById('quiz-view').style.display = 'none';
+  document.getElementById('result-view').style.display = 'block';
+  const pct = Math.round((score / questions.length) * 100);
+  document.getElementById('r-score').textContent = score;
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = questions.length - score;
+  document.getElementById('r-pct').textContent = pct + '%';
+  let title, sub;
+  if (pct >= 90) { title = 'Excellent!'; sub = 'Outstanding knowledge of the French Revolution!'; }
+  else if (pct >= 70) { title = 'Good Job!'; sub = 'You have a solid understanding of this chapter.'; }
+  else if (pct >= 50) { title = 'Keep Practicing!'; sub = 'Review the topics you missed and try again.'; }
+  else { title = 'Needs More Revision'; sub = 'Go through the chapter again carefully and retry.'; }
+  document.getElementById('r-title').textContent = title;
+  document.getElementById('r-sub').textContent = sub;
+
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  order.forEach((idx, ci) => {
+    const q = questions[idx];
+    const ua = userAnswers[ci];
+    const ok = ua === q.ans;
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    div.innerHTML = `<div class="review-q">${ci + 1}. ${q.q}</div>
+      <div class="review-row"><span class="badge ${ok ? 'badge-c' : 'badge-w'}">${ok ? 'Correct' : 'Wrong'}</span> Your answer: ${q.opts[ua] ?? '—'}</div>
+      ${!ok ? `<div class="review-row" style="margin-top:4px"><span class="badge badge-a">Answer</span> ${q.opts[q.ans]}</div>` : ''}`;
+    list.appendChild(div);
+  });
+}
+
+function restart() {
+  current = 0; score = 0; answered = false; userAnswers = [];
+  order = shuffle(questions.map((_, i) => i));
+  document.getElementById('result-view').style.display = 'none';
+  document.getElementById('quiz-view').style.display = 'block';
+  render();
+}
+
+order = shuffle(questions.map((_, i) => i));
+render();
+</script>
+</body>
+</html>
